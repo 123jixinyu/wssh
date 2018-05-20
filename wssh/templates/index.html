@@ -1,255 +1,322 @@
 <!DOCTYPE html>
 <html>
-    <head>
-        <meta charset="utf-8">
-        <title>wssh</title>
+<head>
+  <meta charset="utf-8">
+  <title>91monitor终端远程连接</title>
 
-        <link href="{{url_for('static', filename='bootstrap.min.css')}}" rel="stylesheet" />
-        <link href="{{url_for('static', filename='style.css')}}" rel="stylesheet" />
-    </head>
+  <link href="{{url_for('static', filename='bootstrap.min.css')}}" rel="stylesheet" />
+  <link href="{{url_for('static', filename='style.css')}}" rel="stylesheet" />
+  <link href="{{url_for('static', filename='font-awesome.min.css')}}" rel="stylesheet" />
+  <link href="{{url_for('static', filename='materal.css')}}" rel="stylesheet" />
+  <link href="{{url_for('static', filename='material-dashboard.css')}}" rel="stylesheet" />
+</head>
+<style type="text/css">
+  .col-form-label {
+    line-height: 3;
+  }
 
-    <body>
-        <div class="navbar navbar-fixed-top">
-            <div class="navbar-inner">
-                <div class="container">
-                    <a class="brand" href="#">wssh</a>
+  .container {
+    width: 50%;
+    background-color: white;
+    box-shadow: lightblue 0 0 10px 10px;
+    padding: 50px;
+  }
+
+  .cp {
+    padding: 0 !important;
+  }
+</style>
+<body>
+
+<div class="container">
+  <!-- Connection form -->
+
+  <form id="connect" class="form-horizontal">
+    <fieldset>
+      <legend>远程连接</legend>
+
+      <div class="row">
+        <label class="col-sm-2 col-form-label">地址信息:</label>
+        <div class="col-sm-10 cp">
+          <div class="row">
+            <div class="col-md-3">
+              <div class="form-group">
+                <input type="text" class="form-control" placeholder="请输入用户名" id="username" value="root">
+              </div>
+            </div>
+            <div class="form-group" style="line-height: 38px">@</div>
+            <div class="col-md-4">
+              <div class="form-group">
+                <input type="text" class="form-control" placeholder="请输入IP地址" id="hostname">
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!--<div class="control-group">-->
+      <!--<label class="control-label">-->
+      <!--地址-->
+      <!--</label>-->
+      <!--<div class="controls">-->
+      <!--<input type="text" id="username"-->
+      <!--class="input-small form-control"-->
+      <!--placeholder="请输入登录用户" value="root"/>-->
+      <!--<div class="input-prepend">-->
+      <!--<span class="add-on">@</span><input-->
+      <!--type="text"-->
+      <!--id="hostname"-->
+      <!--class="input-large form-control"-->
+      <!--placeholder="请输入登录地址"/>-->
+      <!--<span class="add-on">port</span><input-->
+      <!--type="text"-->
+      <!--id="portnumber"-->
+      <!--class="input-small form-control"-->
+      <!--value=22>-->
+      <!--</div>-->
+      <!--</div>-->
+      <!--</div>-->
+      <div class="row">
+        <label class="col-sm-2 col-form-label">认证方式:</label>
+        <div class="col-sm-1 checkbox-radios" style="padding: 12px 0;">
+          <div class="form-check">
+            <label class="form-check-label">
+              <input class="form-check-input" type="radio" name="authentication_method" placeholder="请输入用户名"
+                     value="password" checked> 密码
+              <span class="circle">
+                              <span class="check"></span>
+                            </span>
+            </label>
+          </div>
+        </div>
+        <div class="col-sm-1 checkbox-radios" style="padding: 12px 0;">
+          <div class="form-check">
+            <label class="form-check-label">
+              <input class="form-check-input" type="radio" name="authentication_method" placeholder="请输入IP地址"
+                     value="private_key"> 私钥
+              <span class="circle">
+                              <span class="check"></span>
+                            </span>
+            </label>
+          </div>
+        </div>
+      </div>
+
+      <!--<div class="control-group">-->
+      <!--<label class="control-label">-->
+      <!--认证方式-->
+      <!--</label>-->
+
+      <!--<div class="controls">-->
+      <!--<label class="radio">-->
+      <!--<input type="radio" name="authentication_method"-->
+      <!--value="password" checked class="form-control"/>-->
+      <!--密码-->
+      <!--</label>-->
+
+      <!--<label class="radio">-->
+      <!--<input type="radio" name="authentication_method"-->
+      <!--value="private_key" class="form-control"/>-->
+      <!--私钥-->
+      <!--</label>-->
+      <!--</div>-->
+      <!--</div>-->
+
+
+      <div class="row" id="password_authentication">
+        <label class="col-sm-2 col-form-label">密码:</label>
+        <div class="col-sm-10 cp">
+          <div class="row">
+            <div class="col-md-6">
+              <div class="form-group">
+                <input type="password" id="password" class="form-control" placeholder="请输入密码">
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div  id="private_key_authentication">
+        <div class="row">
+          <label class="col-sm-2 col-form-label">私钥:</label>
+          <div class="col-sm-10 cp">
+            <div class="row">
+              <div class="col-md-10">
+                <div class="form-group">
+                <textarea id="private_key" rows="6" cols="20"
+                          class="input-xxlarge form-control"
+                          placeholder="复制 ~/.ssh/id_rsa 或者 ~/.ssh/id_dsa 粘贴到这里"></textarea>
                 </div>
+              </div>
             </div>
+          </div>
         </div>
 
-        <div class="container">
-            <!-- Connection form -->
-
-            <form id="connect" class="form-horizontal">
-                <fieldset>
-                    <legend>Connect to a remote SSH server</legend>
-
-                    <div class="control-group">
-                        <label class="control-label">
-                            Destination
-                        </label>
-                        <div class="controls">
-                            <input type="text" id="username"
-                                class="input-small"
-                                placeholder="root" />
-                            <div class="input-prepend">
-                                <span class="add-on">@</span><input
-                                    type="text"
-                                    id="hostname"
-                                    class="input-large"
-                                    placeholder="localhost" />
-                                <span class="add-on">port</span><input
-                                    type="text"
-                                    id="portnumber"
-                                    class="input-small"
-                                    value=22 />
-                            </div>
-                        </div>
-                    </div>
-
-                    <div class="control-group">
-                        <label class="control-label">
-                            Authentication method
-                        </label>
-
-                        <div class="controls">
-                            <label class="radio">
-                                <input type="radio" name="authentication_method"
-                                    value="password" checked />
-                                    Password
-                            </label>
-
-                            <label class="radio">
-                                <input type="radio" name="authentication_method"
-                                    value="private_key" />
-                                    Private Key
-                            </label>
-                        </div>
-                    </div>
-
-                    <div class="control-group" id="password_authentication">
-                        <label class="control-label">
-                            Password
-                        </label>
-                        <div class="controls">
-                            <input type="password" id="password"
-                                class="input-large" />
-                        </div>
-                    </div>
-
-                    <div id="private_key_authentication">
-                        <div class="control-group">
-                            <label class="control-label">
-                                Private Key
-                            </label>
-                            <div class="controls">
-                                <textarea id="private_key" rows="6"
-                                    class="input-xxlarge"></textarea>
-                                <p class="help-block">
-                                    Copy &amp; Paste your SSH private from
-                                    <code>~/.ssh/id_rsa</code> or
-                                    <code>~/.ssh/id_dsa</code>
-                                </p>
-                            </div>
-                        </div>
-
-                        <div class="control-group">
-                            <label class="control-label">
-                                Key Passphrase
-                            </label>
-                            <div class="controls">
-                                <input type="password" id="key_passphrase"
-                                    class="input-large" />
-                                <p class="help-block">
-                                    Enter your private key passphrase if it
-                                    is encrypted. Leave empty otherwise.
-                                </p>
-                            </div>
-                        </div>
-                    </div>
-
-                    <div class="control-group">
-                        <label class="control-label">
-                            Command
-                        </label>
-                        <div class="controls">
-                            <input type="text" id="command" class="input-large" />
-                            <p class="help-block">
-                                Enter command to be executed or
-                                empty for interactive.
-                            </p>
-                        </div>
-                    </div>
-
-                    <div class="form-actions">
-                        <button type="submit" class="btn btn-primary">
-                            Connect
-                        </button>
-                    </div>
-
-                </fieldset>
-            </form>
-
-            <div id="term">
+        <div class="row">
+          <label class="col-sm-2 col-form-label">钥匙密码:</label>
+          <div class="col-sm-10 cp">
+            <div class="row">
+              <div class="col-md-10">
+                <div class="form-group">
+                  <input  type="password" id="key_passphrase" class="form-control" placeholder="请输入密码">
+                </div>
+              </div>
             </div>
-
+          </div>
         </div>
+      </div>
 
-        <script type="application/javascript" src="{{url_for('static', filename='jquery.min.js')}}">
-        </script>
-        <script type="application/javascript" src="{{url_for('static', filename='term.js')}}">
-        </script>
-        <script type="application/javascript" src="{{url_for('static', filename='wssh.js')}}">
-        </script>
-        <script type="application/javascript">
-            function openTerminal(options) {
-                var client = new WSSHClient();
-                var term = new Terminal(80, 24, function(key) {
-                    client.send(key);
-                });
-                term.open();
-                $('.terminal').detach().appendTo('#term');
-                term.resize(80, 24);
-                term.write('Connecting...');
-                client.connect($.extend(options, {
-                    onError: function(error) {
-                        term.write('Error: ' + error + '\r\n');
-                    },
-                    onConnect: function() {
-                        // Erase our connecting message
-                        term.write('\r');
-                    },
-                    onClose: function() {
-                        term.write('Connection Reset By Peer');
-                    },
-                    onData: function(data) {
-                        term.write(data);
-                    }
-                }));
-            }
-        </script>
 
-        <script type='application/javascript'>
-            $(document).ready(function() {
-                $('#ssh').hide();
-                $('#private_key_authentication', '#connect').hide();
 
-                $('input:radio[value=private_key]', '#connect').click(
-                    function() {
-                        $('#password_authentication').hide();
-                        $('#private_key_authentication').show();
-                    }
-                );
+      <!--<div id="private_key_authentication">-->
+        <!--<div class="control-group">-->
+          <!--<label class="control-label">-->
+            <!--私钥:-->
+          <!--</label>-->
+          <!--<div class="controls">-->
+                                <!--<textarea id="private_key" rows="6"-->
+                                          <!--class="input-xxlarge form-control"-->
+                                          <!--placeholder="复制 ~/.ssh/id_rsa 或者 ~/.ssh/id_dsa 粘贴到这里"></textarea>-->
+          <!--</div>-->
+        <!--</div>-->
 
-                $('input:radio[value=password]', '#connect').click(
-                    function() {
-                        $('#password_authentication').show();
-                        $('#private_key_authentication').hide();
-                    }
-                );
+        <!--<div class="control-group">-->
+          <!--<label class="control-label">-->
+            <!--钥匙密码，如果需要（Key Passphrase）-->
+          <!--</label>-->
+          <!--<div class="controls">-->
+            <!--<input type="password" id="key_passphrase"-->
+                   <!--class="input-large form-control"/>-->
+            <!--<p class="help-block">-->
+              <!--如果是加密的，请输入私钥密码，否则不填-->
+            <!--</p>-->
+          <!--</div>-->
+        <!--</div>-->
+      <!--</div>-->
 
-                $('#connect').submit(function(ev) {
-                    ev.preventDefault();
+      <div class="form-actions text-center">
+        <button type="submit" class="btn btn-primary">
+          开始连接
+        </button>
+      </div>
 
-                    function validate(fields) {
-                        var success = true;
-                        fields.forEach(function(field) {
-                            if (!field.val()) {
-                                field.closest('.control-group')
-                                    .addClass('error');
-                                success = false;
-                            }
-                        });
-                        return success;
-                    }
+    </fieldset>
+  </form>
 
-                    // Clear errors
-                    $('.error').removeClass('error');
+  <div id="term">
+  </div>
 
-                    var username = $('input:text#username');
-                    var hostname = $('input:text#hostname');
-                    var portnumber = $('input:text#portnumber');
-                    var command = $('input:text#command');
+</div>
 
-                    var authentication = $(
-                        'input[name=authentication_method]:checked',
-                        '#connect').val();
-                    var options = {
-                        username: username.val(),
-                        hostname: hostname.val(),
-                        command: command.val(),
-                        authentication_method: authentication
-                    };
+<script type="application/javascript" src="{{url_for('static', filename='jquery.min.js')}}">
+</script>
+<script type="application/javascript" src="{{url_for('static', filename='term.js')}}">
+</script>
+<script type="application/javascript" src="{{url_for('static', filename='wssh.js')}}">
+</script>
+<script type="application/javascript">
+  function openTerminal(options){
+    var client = new WSSHClient();
+    var term = new Terminal(80, 24, function(key){
+      client.send(key);
+    });
+    term.open();
+    $('.terminal').detach().appendTo('#term');
+    term.resize(80, 24);
+    term.write('Connecting...');
+    client.connect($.extend(options, {
+      onError  : function(error){
+        term.write('Error: ' + error + '\r\n');
+      },
+      onConnect: function(){
+        // Erase our connecting message
+        term.write('\r');
+      },
+      onClose  : function(){
+        term.write('Connection Reset By Peer');
+      },
+      onData   : function(data){
+        term.write(data);
+      }
+    }));
+  }
+</script>
 
-                    var port = parseInt(portnumber.val())
-                    if (port > 0 && port < 65535) {
-                        $.extend(options, {port: port});
-                    } else {
-                        $.extend(options, {port: 22});
-                    }
+<script type='application/javascript'>
+  $(document).ready(function(){
+    $('#ssh').hide();
+    $('#private_key_authentication', '#connect').hide();
 
-                    if (authentication == 'password') {
-                        var password = $('input:password#password');
-                        if (!validate([username, hostname, password]))
-                            return false;
-                        $.extend(options, {password: password.val()});
-                    } else if (authentication == 'private_key') {
-                        var private_key = $('textarea#private_key');
-                        if (!validate([username, hostname, private_key]))
-                            return false;
-                        $.extend(options, {private_key: private_key.val()});
-                        var key_passphrase = $('input:password#key_passphrase');
-                        if (key_passphrase.val()) {
-                            $.extend(options,
-                                {key_passphrase: key_passphrase.val()});
-                        }
-                    }
+    $('input:radio[value=private_key]', '#connect').click(function(){
+      $('#password_authentication').hide();
+      $('#private_key_authentication').show();
+    });
 
-                    $('#connect').hide();
-                    $('#ssh').show();
-                    openTerminal(options);
-                });
-            });
-        </script>
-    </body>
+    $('input:radio[value=password]', '#connect').click(function(){
+      $('#password_authentication').show();
+      $('#private_key_authentication').hide();
+    });
+
+    $('#connect').submit(function(ev){
+      ev.preventDefault();
+
+      function validate(fields){
+        var success = true;
+        fields.forEach(function(field){
+          if(!field.val()){
+            field.closest('.control-group')
+              .addClass('error');
+            success = false;
+          }
+        });
+        return success;
+      }
+
+      // Clear errors
+      $('.error').removeClass('error');
+
+      var username = $('input:text#username');
+      var hostname = $('input:text#hostname');
+      var portnumber = $('input:text#portnumber');
+      var command = $('input:text#command');
+
+      var authentication = $('input[name=authentication_method]:checked', '#connect').val();
+      var options = {
+        username             : username.val(),
+        hostname             : hostname.val(),
+        command              : command.val(),
+        authentication_method: authentication
+      };
+
+      var port = parseInt(portnumber.val())
+      if(port > 0 && port < 65535){
+        $.extend(options, {port: port});
+      }else{
+        $.extend(options, {port: 22});
+      }
+
+      if(authentication == 'password'){
+        var password = $('input:password#password');
+        if(!validate([username, hostname, password])){
+          return false;
+        }
+        $.extend(options, {password: password.val()});
+      }else if(authentication == 'private_key'){
+        var private_key = $('textarea#private_key');
+        if(!validate([username, hostname, private_key])){
+          return false;
+        }
+        $.extend(options, {private_key: private_key.val()});
+        var key_passphrase = $('input:password#key_passphrase');
+        if(key_passphrase.val()){
+          $.extend(options, {key_passphrase: key_passphrase.val()});
+        }
+      }
+
+      $('#connect').hide();
+      $('#ssh').show();
+      openTerminal(options);
+    });
+  });
+</script>
+</body>
 </html>
