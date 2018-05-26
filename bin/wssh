@@ -92,8 +92,7 @@ if __name__ == '__main__':
         'password': password,
         'port': str(args.ssh_port),
         'private_key': key,
-        'key_passphrase': key_passphrase,
-        'run': ' '.join(args.command) if args.command else None,
+        'key_passphrase': key_passphrase
     }
 
     # Filter empty parameters
