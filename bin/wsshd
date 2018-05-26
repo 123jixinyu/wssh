@@ -22,9 +22,7 @@ def connect(hostname, username):
     app.logger.debug('{remote} -> {username}@{hostname}: {command}'.format(
             remote=request.remote_addr,
             username=username,
-            hostname=hostname,
-            command=request.args['run'] if 'run' in request.args else
-                '[interactive shell]'
+            hostname=hostname
         ))
 
     # Abort if this is not a websocket request
