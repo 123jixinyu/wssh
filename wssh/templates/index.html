@@ -57,7 +57,7 @@
             </div>
             <div class="col-md-2">
               <div class="form-group">
-                <input type="text" class="form-control" placeholder="端口" id="portnumber">
+                <input type="text" class="form-control" placeholder="端口" id="portnumber" value="22">
               </div>
             </div>
           </div>
@@ -209,7 +209,7 @@
           <div class="row">
             <div class="col-md-10">
               <div class="form-group">
-                <input  type="password" id="command" class="form-control" placeholder="输入需要执行的命令">
+                <input  type="text" id="command" class="form-control" placeholder="输入需要执行的命令">
               </div>
             </div>
           </div>
@@ -306,7 +306,7 @@
       var options = {
         username             : username.val(),
         hostname             : hostname.val(),
-        command              : command.val(),
+//        command              : command.val(),
         authentication_method: authentication
       };
 
