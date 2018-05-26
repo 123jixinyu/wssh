@@ -10,10 +10,10 @@
   <link href="{{url_for('static', filename='materal.css')}}" rel="stylesheet" />
   <link href="{{url_for('static', filename='material-dashboard.css')}}" rel="stylesheet" />
 
-  <link href="../static/style.css" rel="stylesheet"/>
-  <link href="../static/font-awesome.min.css" rel="stylesheet"/>
-  <link href="../static/materal.css" rel="stylesheet"/>
-  <link href="../static/material-dashboard.css" rel="stylesheet"/>
+  <!--<link href="../static/style.css" rel="stylesheet"/>-->
+  <!--<link href="../static/font-awesome.min.css" rel="stylesheet"/>-->
+  <!--<link href="../static/materal.css" rel="stylesheet"/>-->
+  <!--<link href="../static/material-dashboard.css" rel="stylesheet"/>-->
 </head>
 <style type="text/css">
   .col-form-label {
@@ -29,6 +29,9 @@
 
   .cp {
     padding: 0 !important;
+  }
+  .terminal{
+    width: 100%;
   }
 </style>
 <body>
@@ -203,7 +206,7 @@
         <!--</div>-->
       <!--</div>-->
 
-      <div class="row">
+      <div class="row" style="display: none">
         <label class="col-sm-2 col-form-label">命令:</label>
         <div class="col-sm-10 cp">
           <div class="row">
