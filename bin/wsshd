@@ -19,7 +19,7 @@ def index():
 
 @app.route('/wssh/<hostname>/<username>')
 def connect(hostname, username):
-    app.logger.debug('{remote} -> {username}@{hostname}: {command}'.format(
+    app.logger.debug('{remote} -> {username}@{hostname}'.format(
             remote=request.remote_addr,
             username=username,
             hostname=hostname
